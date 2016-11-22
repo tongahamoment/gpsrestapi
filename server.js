@@ -71,8 +71,8 @@ app.post("/payloads", function(req, res) {
  *    DELETE: deletes payload by id
  */
 
-app.get("/payloads/user/:id", function(req, res) {
-  db.collection(payloadS_COLLECTION).findOne({ "userid": new ObjectID(req.params.id)}, function(err, doc) {
+app.get("/payloads/user/:userid", function(req, res) {
+  db.collection(payloadS_COLLECTION).findOne({ "userid": string(req.params.userid)}, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get payload");
     } else {
