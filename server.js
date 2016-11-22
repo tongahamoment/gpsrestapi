@@ -65,7 +65,7 @@ app.post("/payloads", function(req, res) {
 });
 
 
-/*  "/payloads/:id"
+/*  "/payloads/user/:userid"
  *    GET: find payload by id
  *    PUT: update payload by id
  *    DELETE: deletes payload by id
@@ -103,3 +103,5 @@ app.delete("/payloads/user/:userid", function(req, res) {
     }
   });
 });
+
+
