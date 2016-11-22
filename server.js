@@ -72,7 +72,7 @@ app.post("/payloads", function(req, res) {
  */
 
 app.get("/payloads/user/:userid", function(req, res) {
-  db.collection(PAYLOADS_COLLECTION).find({userid:req.params.userid}, function(err, doc) {
+  db.collection(PAYLOADS_COLLECTION).find({userid:req.params.userid}).toArray(function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get payload");
     } else {
