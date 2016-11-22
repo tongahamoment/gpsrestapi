@@ -103,7 +103,7 @@ app.put("/payloads/:id", function(req, res) {
 });
 
 app.delete("/payloads/:id", function(req, res) {
-  db.collection(PAYLOADS_COLLECTION).deleteOne({userid: new ObjectID(req.params.id)}, function(err, result) {
+  db.collection(PAYLOADS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
     if (err) {
       handleError(res, err.message, "Failed to delete payload");
     } else {
