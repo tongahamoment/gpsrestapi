@@ -54,9 +54,13 @@ app.get("/payloads", function(req, res) {
 app.post("/payloads", function(req, res) {
   var newpayload = req.body;
   newpayload.createDate = new Date();
+  
+  if (!(req.body.data)) {
+    handleError(res, "Invalid user input", "Must provide location data.", 400);
+  }
 
-  if (!(req.body.firstName || req.body.lastName)) {
-    handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
+  if (!(req.body.userid)) {
+    handleError(res, "Invalid user input", "Must provide a user id.", 400);
   }
 
   db.collection(PAYLOADS_COLLECTION).insertOne(newpayload, function(err, doc) {
@@ -68,6 +72,7 @@ app.post("/payloads", function(req, res) {
   });
 });
 
+
 /*  "/payloads/:id"
  *    GET: find payload by id
  *    PUT: update payload by id
@@ -75,7 +80,7 @@ app.post("/payloads", function(req, res) {
  */
 
 app.get("/payloads/:id", function(req, res) {
-  db.collection(payloadS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+  db.collection(payloadS_COLLECTION).findOne({ userid: new ObjectID(req.params.id) }, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get payload");
     } else {
@@ -88,7 +93,7 @@ app.put("/payloads/:id", function(req, res) {
   var updateDoc = req.body;
   delete updateDoc._id;
 
-  db.collection(PAYLOADS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+  db.collection(PAYLOADS_COLLECTION).updateOne({userid: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to update payload");
     } else {
@@ -98,7 +103,7 @@ app.put("/payloads/:id", function(req, res) {
 });
 
 app.delete("/payloads/:id", function(req, res) {
-  db.collection(PAYLOADS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+  db.collection(PAYLOADS_COLLECTION).deleteOne({userid: new ObjectID(req.params.id)}, function(err, result) {
     if (err) {
       handleError(res, err.message, "Failed to delete payload");
     } else {
