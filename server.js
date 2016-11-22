@@ -36,6 +36,11 @@ function handleError(res, reason, message, code) {
   res.status(code || 500).json({"error": message});
 }
 
+
+app.get("/", function(req, res) {
+ 
+});
+
 /*  "/payloads"
  *    GET: finds all payloads
  *    POST: creates a new payload
