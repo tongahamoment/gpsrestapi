@@ -10,7 +10,9 @@ var app = express();
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
+
 var db;
+
 
 mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   if (err) {
@@ -28,9 +30,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   });
 });
 
-// Rolendar GPS API ROUTES BELOW
 
-// Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
   res.status(code || 500).json({"error": message});
@@ -38,10 +38,17 @@ function handleError(res, reason, message, code) {
 
 /*  "/payloads"
  *    GET: finds all payloads
- *    POST: creates a new payloads
+ *    POST: creates a new payload
  */
 
 app.get("/payloads", function(req, res) {
+  db.collection(PAYLOADS_COLLECTION).find({}).toArray(function(err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed to get payloads.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
 });
 
 app.post("/payloads", function(req, res) {
@@ -62,16 +69,40 @@ app.post("/payloads", function(req, res) {
 });
 
 /*  "/payloads/:id"
- *    GET: find payloads by id
- *    PUT: update contact by id
- *    DELETE: deletes contact by id
+ *    GET: find payload by id
+ *    PUT: update payload by id
+ *    DELETE: deletes payload by id
  */
 
 app.get("/payloads/:id", function(req, res) {
+  db.collection(payloadS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to get payload");
+    } else {
+      res.status(200).json(doc);
+    }
+  });
 });
 
 app.put("/payloads/:id", function(req, res) {
+  var updateDoc = req.body;
+  delete updateDoc._id;
+
+  db.collection(PAYLOADS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to update payload");
+    } else {
+      res.status(204).end();
+    }
+  });
 });
 
 app.delete("/payloads/:id", function(req, res) {
+  db.collection(PAYLOADS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
+    if (err) {
+      handleError(res, err.message, "Failed to delete payload");
+    } else {
+      res.status(204).end();
+    }
+  });
 });
