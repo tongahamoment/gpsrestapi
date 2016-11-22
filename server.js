@@ -72,6 +72,10 @@ app.post("/payloads", function(req, res) {
  */
 
 app.get("/payloads/user/:userid", function(req, res) {
+  console.log("------------------------------------------------------------------req.params");
+  console.log(req.params);
+  console.log("------------------------------------------------------------------req.body");
+  console.log(req.body);
   db.collection(payloadS_COLLECTION).findOne({ "userid": string(req.params.userid)}, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get payload");
