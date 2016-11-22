@@ -55,14 +55,6 @@ app.post("/payloads", function(req, res) {
   var newpayload = req.body;
   newpayload.createDate = new Date();
   
-  if (!(req.body.data)) {
-    handleError(res, "Invalid user input", "Must provide location data.", 400);
-  }
-
-  if (!(req.body.userid)) {
-    handleError(res, "Invalid user input", "Must provide a user id.", 400);
-  }
-
   db.collection(PAYLOADS_COLLECTION).insertOne(newpayload, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new payload.");
@@ -80,7 +72,7 @@ app.post("/payloads", function(req, res) {
  */
 
 app.get("/payloads/user/:id", function(req, res) {
-  db.collection(payloadS_COLLECTION).findOne({ userid: new ObjectID(req.params.userid) }, function(err, doc) {
+  db.collection(payloadS_COLLECTION).findOne({ userid: new ObjectID(req.params.id) }, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get payload");
     } else {
@@ -91,9 +83,9 @@ app.get("/payloads/user/:id", function(req, res) {
 
 app.put("/payloads/user/:id", function(req, res) {
   var updateDoc = req.body;
-  delete updateDoc._id;
+  delete updateDoc.userid;
 
-  db.collection(PAYLOADS_COLLECTION).updateOne({userid: new ObjectID(req.params.userid)}, updateDoc, function(err, doc) {
+  db.collection(PAYLOADS_COLLECTION).updateOne({userid: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to update payload");
     } else {
@@ -103,7 +95,7 @@ app.put("/payloads/user/:id", function(req, res) {
 });
 
 app.delete("/payloads/user/:id", function(req, res) {
-  db.collection(PAYLOADS_COLLECTION).deleteOne({userid: new ObjectID(req.params.userid)}, function(err, result) {
+  db.collection(PAYLOADS_COLLECTION).deleteOne({userid: new ObjectID(req.params.id)}, function(err, result) {
     if (err) {
       handleError(res, err.message, "Failed to delete payload");
     } else {
