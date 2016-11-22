@@ -79,8 +79,8 @@ app.post("/payloads", function(req, res) {
  *    DELETE: deletes payload by id
  */
 
-app.get("/payloads/:id", function(req, res) {
-  db.collection(payloadS_COLLECTION).findOne({ userid: new ObjectID(req.params.id) }, function(err, doc) {
+app.get("/payloads/user/:id", function(req, res) {
+  db.collection(payloadS_COLLECTION).findOne({ userid: new ObjectID(req.params.userid) }, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get payload");
     } else {
@@ -89,11 +89,11 @@ app.get("/payloads/:id", function(req, res) {
   });
 });
 
-app.put("/payloads/:id", function(req, res) {
+app.put("/payloads/user/:id", function(req, res) {
   var updateDoc = req.body;
   delete updateDoc._id;
 
-  db.collection(PAYLOADS_COLLECTION).updateOne({userid: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
+  db.collection(PAYLOADS_COLLECTION).updateOne({userid: new ObjectID(req.params.userid)}, updateDoc, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to update payload");
     } else {
@@ -102,8 +102,8 @@ app.put("/payloads/:id", function(req, res) {
   });
 });
 
-app.delete("/payloads/:id", function(req, res) {
-  db.collection(PAYLOADS_COLLECTION).deleteOne({userid: new ObjectID(req.params.id)}, function(err, result) {
+app.delete("/payloads/user/:id", function(req, res) {
+  db.collection(PAYLOADS_COLLECTION).deleteOne({userid: new ObjectID(req.params.userid)}, function(err, result) {
     if (err) {
       handleError(res, err.message, "Failed to delete payload");
     } else {
